@@ -22,10 +22,10 @@ def create_sample_users(cursor, num_users=10):
     for i in range(num_users):
         username = f"user{i + 1}"
         password = random_string(10)  # Random password
-        email = f"{username}@example.com"
+        # email = f"{username}@example.com"
         cursor.execute(
-            "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
-            (username, password, email),
+            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, password),
         )
     print(f"Created {num_users} sample users.")
 
@@ -35,7 +35,6 @@ def populate_database():
     conn = connect_to_db()
     cursor = conn.cursor()
 
-    # Create sample users
     create_sample_users(cursor)
 
     # Check the number of users created
