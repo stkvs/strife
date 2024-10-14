@@ -9,15 +9,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
-
-$group_id = 1;
+$group_id = 2;
 
 $stmt_check_group = $conn->prepare("SELECT id FROM groups WHERE id = ?");
 $stmt_check_group->bind_param("i", $group_id);
 $stmt_check_group->execute();
 $result_check_group = $stmt_check_group->get_result();
 
-// Handle sending a new group message
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['group_message'])) {
     if ($result_check_group->num_rows > 0) {
         $group_message = $_POST['group_message'];
@@ -36,6 +34,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['group_message'])) {
         echo "Group does not exist.";
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['private_message'])) {
+    $receiver_id = $_POST['receiver_id'];
+    $private_message = $_POST['private_message'];
+
+    echo "Sender ID: $user_id, Receiver ID: $receiver_id, Message: $private_message";
+
+    $stmt_check_sender = $conn->prepare("SELECT id FROM users WHERE id = ?");
+    $stmt_check_sender->bind_param("i", $user_id);
+    $stmt_check_sender->execute();
+    $result_check_sender = $stmt_check_sender->get_result();
+
+    if ($result_check_sender->num_rows > 0) {
+        $stmt_pm = $conn->prepare("INSERT INTO private_messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
+        $stmt_pm->bind_param("iis", $user_id, $receiver_id, $private_message);
+
+        if ($stmt_pm->execute()) {
+            header("Location: home.php"); 
+            exit;
+        } else {
+            echo "Error sending private message: " . $conn->error;
+        }
+        $stmt_pm->close();
+    } else {
+        echo "Error: Sender ID does not exist in the database.";
+    }
+}
+
 
 $sql_group_messages = "SELECT gm.message, u.username, gm.sent_at
                        FROM group_messages gm
@@ -63,14 +89,14 @@ $result_users = $conn->query($sql_users);
     <title>Home</title>
 </head>
 <body>
-    <h2>Welcome, <?php echo $username; ?>!</h2>
+    <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
 
     <h3>Public Group Messages</h3>
     <ul>
         <?php
         if ($result_group_messages->num_rows > 0) {
             while ($message = $result_group_messages->fetch_assoc()) {
-                echo "<li><b>" . $message['username'] . ":</b> " . $message['message'] . " <i>(" . $message['sent_at'] . ")</i></li>";
+                echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
             }
         } else {
             echo "<li>No messages in the public group yet.</li>";
@@ -90,9 +116,9 @@ $result_users = $conn->query($sql_users);
         if ($result_pm->num_rows > 0) {
             while ($message = $result_pm->fetch_assoc()) {
                 if ($message['sender'] == $username) {
-                    echo "<li><b>You -> " . $message['receiver'] . ":</b> " . $message['message'] . " <i>(" . $message['sent_at'] . ")</i></li>";
+                    echo "<li><b>You -> " . htmlspecialchars($message['receiver']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
                 } else {
-                    echo "<li><b>" . $message['sender'] . " -> You:</b> " . $message['message'] . " <i>(" . $message['sent_at'] . ")</i></li>";
+                    echo "<li><b>" . htmlspecialchars($message['sender']) . " -> You:</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
                 }
             }
         } else {
@@ -108,7 +134,7 @@ $result_users = $conn->query($sql_users);
             <?php
             if ($result_users->num_rows > 0) {
                 while ($user = $result_users->fetch_assoc()) {
-                    echo "<option value='" . $user['id'] . "'>" . $user['username'] . "</option>";
+                    echo "<option value='" . $user['id'] . "'>" . htmlspecialchars($user['username']) . "</option>";
                 }
             }
             ?>
