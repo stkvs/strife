@@ -23,20 +23,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "User not found!";
     }
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="POST" action="login.php">
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <input type="submit" value="Login">
-    </form>
-</body>
-</html>
