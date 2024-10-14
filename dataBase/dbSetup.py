@@ -64,13 +64,13 @@ def create_tables():
         """
         CREATE TABLE IF NOT EXISTS group_messages (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            group_id INT NOT NULL,
             user_id INT NOT NULL,
+            group_id INT NOT NULL,
             message TEXT NOT NULL,
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        )
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
+        );
     """
     )
 
@@ -84,9 +84,22 @@ def create_tables():
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
-        )
+        );
     """
     )
+
+    conn.commit()
+
+    cursor.execute("SELECT COUNT(*) FROM groups")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+        cursor.execute(
+            """
+            INSERT INTO groups (group_name, created_by) 
+            VALUES ('Default Group', 1);
+            """
+        )
 
     conn.commit()
     cursor.close()
@@ -95,7 +108,5 @@ def create_tables():
 
 if __name__ == "__main__":
     create_database()
-
     create_tables()
-
     print("Database and tables created successfully!")
