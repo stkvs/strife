@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             header("Location: home.php");
+            exit;
         } else {
             echo "Invalid credentials!";
         }
@@ -23,4 +24,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "User not found!";
     }
 }
-

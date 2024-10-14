@@ -39,16 +39,15 @@ def create_tables():
             ("default_user", "password123"),
         )
 
+    # Remove groups and group_members tables
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS group_messages (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
-            group_id INT NOT NULL,
             message TEXT NOT NULL,
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-            FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
     )

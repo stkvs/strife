@@ -2,15 +2,18 @@ import mysql.connector
 import random
 import string
 
+
 def connect_to_db():
     conn = mysql.connector.connect(
         host="localhost", user="root", password="", database="messaging_app"
     )
     return conn
 
+
 def random_string(length=20):
     letters = string.ascii_letters + string.digits
     return "".join(random.choice(letters) for i in range(length))
+
 
 def create_sample_users(cursor, num_users=10):
     for i in range(num_users):
@@ -21,6 +24,7 @@ def create_sample_users(cursor, num_users=10):
             (username, password),
         )
     print(f"Created {num_users} sample users.")
+
 
 def populate_database():
     conn = connect_to_db()
@@ -60,7 +64,9 @@ def populate_database():
         receiver_id = random.randint(1, user_count)
         while sender_id == receiver_id:
             receiver_id = random.randint(1, user_count)
-        message = f"Private message from {sender_id} to {receiver_id}: {random_string()}"
+        message = (
+            f"Private message from {sender_id} to {receiver_id}: {random_string()}"
+        )
         try:
             cursor.execute(
                 "INSERT INTO private_messages (sender_id, receiver_id, message) VALUES (%s, %s, %s)",
@@ -73,6 +79,7 @@ def populate_database():
     cursor.close()
     conn.close()
     print("Database populated with sample data!")
+
 
 if __name__ == "__main__":
     populate_database()

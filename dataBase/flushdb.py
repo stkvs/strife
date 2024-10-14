@@ -13,7 +13,6 @@ def flush_database():
     cursor = conn.cursor()
 
     tables = [
-        "group_members",
         "group_messages",
         "private_messages",
     ]

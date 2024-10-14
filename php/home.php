@@ -9,19 +9,15 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
-$group_id = 2;
 
-$stmt_check_group = $conn->prepare("SELECT id FROM groups WHERE id = ?");
-$stmt_check_group->bind_param("i", $group_id);
-$stmt_check_group->execute();
-$result_check_group = $stmt_check_group->get_result();
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['group_message'])) {
-    if ($result_check_group->num_rows > 0) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Handling group message submission
+    if (isset($_POST['group_message'])) {
         $group_message = $_POST['group_message'];
 
-        $stmt = $conn->prepare("INSERT INTO group_messages (user_id, group_id, message) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $user_id, $group_id, $group_message);
+        // Insert the group message with the logged-in user ID
+        $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message) VALUES (?, ?)");
+        $stmt->bind_param("is", $user_id, $group_message);
 
         if ($stmt->execute()) {
             header("Location: home.php"); 
@@ -30,46 +26,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['group_message'])) {
             echo "Error: " . $conn->error;
         }
         $stmt->close();
-    } else {
-        echo "Group does not exist.";
     }
-}
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['private_message'])) {
-    $receiver_id = $_POST['receiver_id'];
-    $private_message = $_POST['private_message'];
+    // Handling private message submission
+    if (isset($_POST['private_message'])) {
+        $receiver_id = $_POST['receiver_id']; // Get the receiver ID from the form
+        $private_message = $_POST['private_message'];
 
-    echo "Sender ID: $user_id, Receiver ID: $receiver_id, Message: $private_message";
+        // Insert the private message with the logged-in user ID
+        $stmt = $conn->prepare("INSERT INTO private_messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $user_id, $receiver_id, $private_message);
 
-    $stmt_check_sender = $conn->prepare("SELECT id FROM users WHERE id = ?");
-    $stmt_check_sender->bind_param("i", $user_id);
-    $stmt_check_sender->execute();
-    $result_check_sender = $stmt_check_sender->get_result();
-
-    if ($result_check_sender->num_rows > 0) {
-        $stmt_pm = $conn->prepare("INSERT INTO private_messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
-        $stmt_pm->bind_param("iis", $user_id, $receiver_id, $private_message);
-
-        if ($stmt_pm->execute()) {
+        if ($stmt->execute()) {
             header("Location: home.php"); 
             exit;
         } else {
-            echo "Error sending private message: " . $conn->error;
+            echo "Error: " . $conn->error;
         }
-        $stmt_pm->close();
-    } else {
-        echo "Error: Sender ID does not exist in the database.";
+        $stmt->close();
     }
 }
 
-
+// Fetch all group messages
 $sql_group_messages = "SELECT gm.message, u.username, gm.sent_at
                        FROM group_messages gm
                        JOIN users u ON gm.user_id = u.id
-                       WHERE gm.group_id = $group_id
                        ORDER BY gm.sent_at DESC";
 $result_group_messages = $conn->query($sql_group_messages);
 
+// Fetch private messages
 $sql_pm = "SELECT pm.id, u1.username AS sender, u2.username AS receiver, pm.message, pm.sent_at
            FROM private_messages pm
            JOIN users u1 ON pm.sender_id = u1.id
@@ -78,6 +63,7 @@ $sql_pm = "SELECT pm.id, u1.username AS sender, u2.username AS receiver, pm.mess
            ORDER BY pm.sent_at DESC";
 $result_pm = $conn->query($sql_pm);
 
+// Fetch all users for private messaging
 $sql_users = "SELECT id, username FROM users WHERE id != '$user_id'";
 $result_users = $conn->query($sql_users);
 ?>
