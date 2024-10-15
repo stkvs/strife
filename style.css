@@ -165,16 +165,6 @@ h2 {
     }
 }
 
-/* Register-Specific Styling */
-#register {
-    /* Additional unique styles for register can be added here */
-}
-
-/* Login-Specific Styling */
-#login {
-    /* Additional unique styles for login can be added here */
-}
-
 /* User Sidebar */
 .user-sidebar {
     position: fixed;
