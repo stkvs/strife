@@ -54,31 +54,33 @@ $result_group_messages = $conn->query($sql_group_messages);
 
         setInterval(fetchMessages, 1000);
     </script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
+    <div class="container">
+        <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
 
-    <h3>Public Group Messages</h3>
-    <ul id="messageList">
-        <?php
-        if ($result_group_messages->num_rows > 0) {
-            while ($message = $result_group_messages->fetch_assoc()) {
-                echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
+        <h3>Public Chat</h3>
+        <ul id="messageList">
+            <?php
+            if ($result_group_messages->num_rows > 0) {
+                while ($message = $result_group_messages->fetch_assoc()) {
+                    echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
+                }
+            } else {
+                echo "<li>No messages in the public group yet.</li>";
             }
-        } else {
-            echo "<li>No messages in the public group yet.</li>";
-        }
-        ?>
-    </ul>
+            ?>
+        </ul>
 
-    <h3>Send a Message to the Group</h3>
-    <form id="messageForm" action="home.php" method="post">
-        <textarea id="messageInput" name="group_message" rows="4" cols="50" placeholder="Type your message here..." required></textarea><br>
-        <input type="button" id="sendButton" value="Send Message">
-    </form>
-
-    <p><a href="./php/logout.php">Logout</a></p>
-
+        <form id="messageForm" action="home.php" method="post">
+            <textarea id="messageInput" name="group_message" rows="4" cols="50" placeholder="Type your message here..." required></textarea>
+            <input type="button" id="sendButton" value="Send Message">
+        </form>
+    </div>
+    <div class="sidebar">
+        <p><a href="./php/logout.php">Logout</a></p>
+    </div>
     <script src="./js/sendGlobal.js"></script>
 </body>
 </html>

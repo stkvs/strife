@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strife | Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <section id="login">
         <h2>Welcome to Strife!</h2>
-        <p>Please enter your details to Log In.</p>
+        <p>Please enter your details to log in.</p>
         <hr>
         <form>
             <label for="username">Username: </label>
-            <input id="username" type="text" name="username" placeholder="Username">
+            <input id="username" type="text" name="username" placeholder="Username" required>
 
             <label for="password">Password: </label>
-            <input id="password" type="password" name="password" placeholder="Password">
+            <input id="password" type="password" name="password" placeholder="Password" required>
 
-            <button id="submit-login">Submit</button>
+            <button id="submit-login" type="submit">Submit</button>
         </form>
         <hr>
         <h3>Don't have an account?</h3>

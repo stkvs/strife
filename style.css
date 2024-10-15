@@ -1,145 +1,424 @@
-/* General styles for the body */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+html {
+    color-scheme: dark;
+}
+
+/* Body Styling */
+body {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-}
-
-h2, h3 {
-    color: #333;
-}
-
-/* Container for chat content */
-.container {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin-top: 30px;
-    padding: 20px;
-    width: 100%;
-}
-
-/* Layout fix: use Flexbox for proper alignment */
-.section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-/* Each section will take 100% of the width and will stack vertically */
-.section > div {
-    flex: 1;
-    width: 100%;
-}
-
-/* Styling for message lists */
-ul {
-    list-style-type: none;
+    flex-direction: row;
+    height: 100vh;
+    background-color: #2f3136; /* Discord dark background */
+    color: #ffffff; /* White text */
     padding: 0;
 }
 
-li {
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-}
-
-li:nth-child(even) {
-    background-color: #e9e9e9;
-}
-
-/* Styling for sender and receiver names */
-b {
-    color: #007bff;
-}
-
-/* Styling for timestamps */
-i {
-    color: #888;
-    font-size: 0.85em;
-    float: right;
-}
-
-/* Text area styling */
-textarea {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-/* Submit button styles */
-input[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Dropdown styles for private message receiver */
-select {
+/* Shared Section Styling for Login and Register */
+#login,
+#register {
+    background-color: #202225; /* Slightly darker background */
+    padding: 40px 40px;
+    border-radius: 10px;
+    max-width: 400px;
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* Logout link styles */
+h2 {
+    color: #ffffff;
+    margin-bottom: 24px;
+    font-size: 24px;
+}
+
+p {
+    color: #b9bbbe; /* Light gray for instructions */
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #4f545c;
+    margin: 20px 0;
+}
+
+h3 {
+    color: #b9bbbe;
+    margin: 16px 0 10px;
+    font-size: 16px;
+}
+
 a {
+    color: #5865f2; /* Discord blue */
     text-decoration: none;
-    color: #007bff;
-    display: inline-block;
-    margin-top: 20px;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-/* Align sections properly */
-h3 {
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
-}
-
-/* Center the container for better layout */
+/* Form Styling */
 form {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Media queries for responsiveness */
-@media (max-width: 600px) {
+input[type="text"],
+input[type="password"] {
+    padding: 12px 15px;
+    background-color: #40444b;
+    color: #dcddde;
+    border: 1px solid #4f545c;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+    width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #5865f2;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #5865f2; /* Discord blue */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #4752c4;
+}
+
+button:active {
+    background-color: #3b44a1;
+}
+
+/* Add Responsiveness for smaller screens */
+@media screen and (max-width: 1024px) {
+    #login,
+    #register {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+/* Left Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #202225; /* Slightly darker gray */
+    padding: 20px 10px;
+    display: flex;
+    justify-content: end;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar a {
+    color: #b9bbbe; /* Light gray links */
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar a:hover {
+    background-color: #3a3d42;
+}
+
+h2 {
+    margin-bottom: 16px;
+}
+
+/* Add Responsiveness for smaller screens */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 60px; /* Smaller sidebar on mobile */
+        padding: 10px 0;
+    }
+}
+
+/* Register-Specific Styling */
+#register {
+    /* Additional unique styles for register can be added here */
+}
+
+/* Login-Specific Styling */
+#login {
+    /* Additional unique styles for login can be added here */
+}
+
+/* User Sidebar */
+.user-sidebar {
+    position: fixed;
+    right: 0;
+    width: 250px;
+    background-color: #202225;
+    padding: 20px;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-sidebar h2 {
+    color: white;
+}
+
+.user-sidebar p {
+    color: #b9bbbe;
+    font-size: 14px;
+}
+
+.user-sidebar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+/* Additional Styling for Logout and other elements */
+p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+p a {
+    color: #5865f2;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    background-color: #2f3136; /* Discord dark background */
+    color: #ffffff; /* White text */
+    padding: 0;
+}
+
+/* Left Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #202225; /* Slightly darker gray */
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar a {
+    color: #b9bbbe; /* Light gray links */
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar a:hover {
+    background-color: #3a3d42;
+}
+
+/* Main Chat Area */
+.container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    padding-left: 270px; /* Space for the sidebar */
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Chat Messages */
+#messageList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+#messageList li {
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #40444b; /* Dark gray background for messages */
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    max-width: 60%;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+#messageList li.user {
+    background-color: #5865f2; /* Blue color for user messages */
+    color: white;
+    align-self: flex-end;
+}
+
+#messageList li:hover {
+    background-color: #3a3d42;
+}
+
+#messageList li b {
+    font-weight: bold;
+}
+
+/* Message Timestamps */
+#messageList i {
+    font-size: 12px;
+    color: #6e737a; /* Lighter gray for timestamps */
+}
+
+/* Textarea for message input */
+#messageForm {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-direction: unset;
+}
+
+textarea {
+    height: 36px;
+    padding: 10px;
+    background-color: #40444b;
+    color: #dcddde;
+    border: 1px solid #4f545c;
+    border-radius: 5px;
+    resize: none;
+    width: 80%;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+textarea:focus {
+    border-color: #5865f2; /* Blue outline on focus */
+}
+
+input[type="button"] {
+    padding: 10px 20px;
+    background-color: #5865f2; /* Discord blue */
+    border: none;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+input[type="button"]:hover {
+    background-color: #4752c4;
+}
+
+input[type="button"]:active {
+    background-color: #3b44a1;
+}
+
+/* Right Sidebar (User Info) */
+.user-sidebar {
+    position: fixed;
+    right: 0;
+    width: 250px;
+    background-color: #202225;
+    padding: 20px;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-sidebar h2 {
+    color: white;
+}
+
+.user-sidebar p {
+    color: #b9bbbe;
+    font-size: 14px;
+}
+
+.user-sidebar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+/* Add Responsiveness for smaller screens */
+@media screen and (max-width: 1024px) {
     .container {
-        padding: 15px;
+        padding-left: 20px; /* Remove space for sidebar on smaller screens */
     }
 
-    textarea, select, input[type="submit"] {
-        width: 100%;
+    .user-sidebar {
+        display: none; /* Hide right sidebar on smaller screens */
     }
 
-    .section {
-        flex-direction: column;
+    .sidebar {
+        width: 60px; /* Smaller sidebar on mobile */
+        padding: 10px 0;
     }
 }
+
+/* Additional Styling for Logout and other elements */
+p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+p a {
+    color: #5865f2;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
