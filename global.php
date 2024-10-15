@@ -11,25 +11,23 @@ $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Handling group message submission
     if (isset($_POST['group_message'])) {
         $group_message = $_POST['group_message'];
 
-        // Insert the group message with the logged-in user ID
         $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message) VALUES (?, ?)");
         $stmt->bind_param("is", $user_id, $group_message);
 
         if ($stmt->execute()) {
-            header("Location: home.php");
-            exit;
+            echo json_encode(['status' => 'success']);
         } else {
-            echo "Error: " . $conn->error;
+            echo json_encode(['status' => 'error', 'message' => $conn->error]);
         }
-        $stmt->close();
+        
+        $stmt->close(); 
+        exit;
     }
 }
 
-// Fetch all group messages
 $sql_group_messages = "SELECT gm.message, u.username, gm.sent_at
                        FROM group_messages gm
                        JOIN users u ON gm.user_id = u.id
@@ -42,12 +40,26 @@ $result_group_messages = $conn->query($sql_group_messages);
 <head>
     <meta charset="UTF-8">
     <title>Group Messages</title>
+    <script>
+        function fetchMessages() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "./php/fetchMessages.php", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById("messageList").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
+        setInterval(fetchMessages, 1000);
+    </script>
 </head>
 <body>
     <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
 
     <h3>Public Group Messages</h3>
-    <ul>
+    <ul id="messageList">
         <?php
         if ($result_group_messages->num_rows > 0) {
             while ($message = $result_group_messages->fetch_assoc()) {
@@ -60,11 +72,10 @@ $result_group_messages = $conn->query($sql_group_messages);
     </ul>
 
     <h3>Send a Message to the Group</h3>
-    <form>
+    <form id="messageForm" action="home.php" method="post">
         <textarea id="messageInput" name="group_message" rows="4" cols="50" placeholder="Type your message here..." required></textarea><br>
         <input type="button" id="sendButton" value="Send Message">
     </form>
-
 
     <p><a href="./php/logout.php">Logout</a></p>
 
