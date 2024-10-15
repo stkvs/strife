@@ -6,9 +6,7 @@
     <title>Strife | Global</title>
 </head>
 <body>
-    <aside id="private-dms">
-        <!-- List of users are here -->
-    </aside>
+    <a href="./private.html">Private DMS</a>
     <main>
         <section id="chat-wall">
             <!-- Chat will be here -->

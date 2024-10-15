@@ -15,6 +15,47 @@ def random_string(length=20):
     return "".join(random.choice(letters) for i in range(length))
 
 
+def create_tables(cursor):
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL
+    )
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS groups (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        group_name VARCHAR(255) NOT NULL,
+        created_by INT NOT NULL,
+        FOREIGN KEY (created_by) REFERENCES users(id)
+    )
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS group_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        group_id INT NOT NULL,
+        message TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (group_id) REFERENCES groups(id)
+    )
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS private_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        sender_id INT NOT NULL,
+        receiver_id INT NOT NULL,
+        message TEXT NOT NULL,
+        FOREIGN KEY (sender_id) REFERENCES users(id),
+        FOREIGN KEY (receiver_id) REFERENCES users(id)
+    )
+    """)
+
+
 def create_sample_users(cursor, num_users=10):
     for i in range(num_users):
         username = f"user{i + 1}"
@@ -30,6 +71,7 @@ def populate_database():
     conn = connect_to_db()
     cursor = conn.cursor()
 
+    create_tables(cursor)
     create_sample_users(cursor)
 
     cursor.execute("SELECT COUNT(*) FROM users")
@@ -65,7 +107,7 @@ def populate_database():
         while sender_id == receiver_id:
             receiver_id = random.randint(1, user_count)
         message = (
-            f"Private message from {sender_id} to {receiver_id}: {random_string()}"
+            f"{random_string()}"
         )
         try:
             cursor.execute(

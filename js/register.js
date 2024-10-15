@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.includes('Invalid credentials!') || data.includes('User not found!')) {
                     alert(data);
                 } else {
-                    window.location.href = './php/home.php';
+                    window.location.href = './global.php';
                 }
             })
             .catch(error => console.error('Error:', error));
