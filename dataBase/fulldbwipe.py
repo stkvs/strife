@@ -19,6 +19,7 @@ def flush_database():
             "group_messages",
             "private_messages",
             "users",
+            "admins",
         ]
 
         for table in tables:

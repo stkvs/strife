@@ -66,6 +66,15 @@ def create_tables():
         """
     )
 
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS admins (
+            username VARCHAR(255) PRIMARY KEY,
+            role ENUM('mod', 'admin') NOT NULL
+        );
+        """
+    )
+
     conn.commit()
     cursor.close()
     conn.close()

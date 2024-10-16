@@ -127,32 +127,6 @@ button:active {
     }
 }
 
-/* Left Sidebar */
-.sidebar {
-    width: 240px;
-    background-color: #202225; /* Slightly darker gray */
-    padding: 20px 10px;
-    display: flex;
-    justify-content: end;
-    flex-direction: column;
-    gap: 10px;
-    position: fixed;
-    height: 100%;
-}
-
-.sidebar a {
-    color: #b9bbbe; /* Light gray links */
-    text-decoration: none;
-    display: block;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.sidebar a:hover {
-    background-color: #3a3d42;
-}
-
 h2 {
     margin-bottom: 16px;
 }
@@ -194,7 +168,7 @@ h2 {
     border-radius: 50%;
 }
 
-#adminModal {
+#adminModal, #modModal {
     padding: 16px;
     border-radius: 0.5rem;
     background-color: #202225;
@@ -205,7 +179,7 @@ h2 {
     z-index: +1;
 }
 
-#adminModal input {
+#adminModal input, #modModal input {
     padding: 10px 20px;
     background-color: #5865f2; /* Discord blue */
     border: none;
@@ -289,6 +263,7 @@ body {
     padding: 20px 10px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 10px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
     position: fixed;
