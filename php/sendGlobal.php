@@ -27,7 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Define upload directory
         $upload_dir = '../uploads/';
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
+            if (!mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
+                echo json_encode(["status" => "error", "message" => "Failed to create upload directory."]);
+                exit;
+            }
         }
 
         // Move uploaded file to the designated directory
@@ -40,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Insert message with file path into the database
+    // Prepare and execute database insertion
     $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message, file_path) VALUES (?, ?, ?)");
     if ($stmt === false) {
         echo json_encode(["status" => "error", "message" => "Error preparing the statement: " . $conn->error]);
@@ -52,7 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Message sent successfully!"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error: " . $stmt->error]);
+        echo json_encode(["status" => "error", "message" => "Error executing query: " . $stmt->error]);
+        // Log error for further investigation
+        error_log("Database Insert Error: " . $stmt->error);
     }
 
     $stmt->close();
