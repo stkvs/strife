@@ -194,6 +194,50 @@ h2 {
     border-radius: 50%;
 }
 
+#adminModal {
+    padding: 16px;
+    border-radius: 0.5rem;
+    background-color: #202225;
+    /* display: none; */
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: +1;
+}
+
+#adminModal input {
+    padding: 10px 20px;
+    background-color: #5865f2; /* Discord blue */
+    border: none;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: unset;
+    padding: unset;
+    border-radius: unset;
+    width: unset;
+}
+
+.settings svg {
+    height: 32px;
+    width: 32px;
+}
+
+.settings:hover {
+    background-color: unset;
+}
+
 /* Additional Styling for Logout and other elements */
 p {
     margin-top: 10px;
@@ -207,6 +251,17 @@ p a {
 
 p a:hover {
     text-decoration: underline;
+}
+
+.settingsModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: #202225;  
+    padding: 16px;
+    border-radius: 0.5rem
 }
 
 /* General Reset */
