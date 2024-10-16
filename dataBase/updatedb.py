@@ -47,6 +47,7 @@ def create_tables():
             user_id INT NOT NULL,
             message TEXT NOT NULL,
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            file_path VARCHAR(255) NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
