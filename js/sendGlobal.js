@@ -1,4 +1,11 @@
-document.getElementById("sendButton").addEventListener("click", function () {
+document.getElementById("sendButton").addEventListener("click", sendMessage);
+document.getElementById("messageInput").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
+
+function sendMessage() {
   var message = document.getElementById("messageInput").value;
 
   var xhr = new XMLHttpRequest();
@@ -17,4 +24,4 @@ document.getElementById("sendButton").addEventListener("click", function () {
   };
 
   xhr.send("group_message=" + encodeURIComponent(message));
-});
+}
