@@ -47,7 +47,8 @@ if ($result_group_messages->num_rows > 0) {
             strpos($message['message'], 'https') !== false || 
             strpos($message['message'], 'http') !== false || 
             strpos($message['message'], 'www') !== false) {
-            $message_text = '<a href="'. $message_text . '" target="_blank">' . $message_text . '</a>';
+            $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
+            $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
         }
         
         echo "<li class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
