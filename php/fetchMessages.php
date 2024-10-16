@@ -17,6 +17,9 @@ if ($result_group_messages->num_rows > 0) {
     while ($message = $result_group_messages->fetch_assoc()) {
         $message_text = htmlspecialchars($message['message']);
         
+        // Initialize highlight_class
+        $highlight_class = '';
+        
         // Find all mentions in the message
         preg_match_all('/@(\w+)/', $message['message'], $mentions);
         
@@ -25,8 +28,6 @@ if ($result_group_messages->num_rows > 0) {
             if ($mention === $current_user) {
                 // Replace the mention with highlighted span if user is the current user
                 $highlight_class = 'highlight';
-            } else {
-                $highlight_class = '';
             }
         }
         
