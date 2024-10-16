@@ -10,8 +10,11 @@ $result_group_messages = $conn->query($sql_group_messages);
 
 if ($result_group_messages->num_rows > 0) {
     while ($message = $result_group_messages->fetch_assoc()) {
-        echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
+        $message_text = htmlspecialchars($message['message']);
+        $message_text = preg_replace('/@(\w+)/', '<span class="mention">@${1}</span>', $message_text);
+        echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
     }
 } else {
     echo "<li>No messages in the public group yet.</li>";
 }
+?>

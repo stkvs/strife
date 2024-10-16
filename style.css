@@ -266,6 +266,11 @@ body {
     position: relative;
 }
 
+.mention {
+    color: #5865f2;
+    font-weight: bold;
+}
+
 /* Chat Messages */
 #messageList {
     display: flex;
