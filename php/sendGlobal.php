@@ -10,18 +10,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $user_id = $_SESSION['user_id'];
     $message = isset($_POST['group_message']) ? trim($_POST['group_message']) : '';
-    if (empty($message)) {
-        echo json_encode(["status" => "error", "message" => "Message cannot be empty."]);
-        exit;
+
+    $file_path = null;
+
+    // Check if a file is uploaded
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        // Define allowed file types
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'video/mp4', 'audio/mp4'];
+        $file_type = $_FILES['file']['type'];
+
+        if (!in_array($file_type, $allowed_types)) {
+            echo json_encode(["status" => "error", "message" => "File type not allowed."]);
+            exit;
+        }
+
+        // Define upload directory
+        $upload_dir = '../uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        // Move uploaded file to the designated directory
+        $file_name = basename($_FILES['file']['name']);
+        $file_path = $upload_dir . uniqid() . "_" . $file_name;
+
+        if (!move_uploaded_file($_FILES['file']['tmp_name'], $file_path)) {
+            echo json_encode(["status" => "error", "message" => "File upload failed."]);
+            exit;
+        }
     }
 
-    $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message) VALUES (?, ?)");
+    // Insert message with file path into the database
+    $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message, file_path) VALUES (?, ?, ?)");
     if ($stmt === false) {
         echo json_encode(["status" => "error", "message" => "Error preparing the statement: " . $conn->error]);
         exit;
     }
 
-    $stmt->bind_param("is", $user_id, $message);
+    $stmt->bind_param("iss", $user_id, $message, $file_path);
 
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Message sent successfully!"]);

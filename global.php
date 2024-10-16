@@ -85,7 +85,26 @@ $result_group_messages = $conn->query($sql_group_messages);
             <?php
             if ($result_group_messages->num_rows > 0) {
                 while ($message = $result_group_messages->fetch_assoc()) {
-                    echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
+                    echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> ";
+                    
+                    // Check if it's a text message
+                    if (!empty($message['message'])) {
+                        echo htmlspecialchars($message['message']);
+                    }
+
+                    // Check if it's a file (image, audio, video)
+                    if (!empty($message['file_path'])) {
+                        $file_type = mime_content_type($message['file_path']);
+                        if (strpos($file_type, 'image') !== false) {
+                            echo "<br><img src='" . htmlspecialchars($message['file_path']) . "' alt='image' style='max-width: 200px;'/>";
+                        } elseif (strpos($file_type, 'audio') !== false) {
+                            echo "<br><audio controls><source src='" . htmlspecialchars($message['file_path']) . "' type='" . htmlspecialchars($file_type) . "'></audio>";
+                        } elseif (strpos($file_type, 'video') !== false) {
+                            echo "<br><video controls style='max-width: 200px;'><source src='" . htmlspecialchars($message['file_path']) . "' type='" . htmlspecialchars($file_type) . "'></video>";
+                        }
+                    }
+
+                    echo " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
                 }
             } else {
                 echo "<li>No messages in the public group yet.</li>";
@@ -93,10 +112,13 @@ $result_group_messages = $conn->query($sql_group_messages);
             ?>
         </ul>
 
-        <form id="messageForm" action="home.php" method="post">
-            <textarea id="messageInput" name="group_message" rows="4" cols="50" placeholder="Type your message here..." required></textarea>
+
+        <form id="messageForm" action="home.php" method="post" enctype="multipart/form-data">
+            <textarea id="messageInput" name="group_message" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+            <input type="file" id="fileInput" name="file" accept="image/*,audio/*,video/*">
             <input type="button" id="sendButton" value="Send Message">
         </form>
+
     </div>
     <div class="sidebar">
         <p><a href="private.php">Private Messages</a></p>
