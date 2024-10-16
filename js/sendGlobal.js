@@ -21,7 +21,7 @@ function sendMessage() {
         alert("Error: " + response.message);
       }
     }
-  };
+  };  
 
   xhr.send("group_message=" + encodeURIComponent(message));
 }
