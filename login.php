@@ -13,7 +13,7 @@
         <hr>
         <form>
             <label for="username">Username: </label>
-            <input id="username" type="text" name="username" placeholder="Username" required>
+            <input id="username" type="text" name="username" placeholder="Username" required pattern="^\S+$" title="Username cannot contain spaces">
 
             <label for="password">Password: </label>
             <input id="password" type="password" name="password" placeholder="Password" required>
