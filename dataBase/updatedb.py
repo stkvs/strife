@@ -32,12 +32,12 @@ def create_tables():
         """
     )
 
-    cursor.execute("SELECT COUNT(*) FROM users")
-    if cursor.fetchone()[0] == 0:
-        cursor.execute(
-            "INSERT INTO users (username, password) VALUES (%s, %s)",
-            ("default_user", "password123"),
-        )
+    # cursor.execute("SELECT COUNT(*) FROM users")
+    # if cursor.fetchone()[0] == 0:
+    #     cursor.execute(
+    #         "INSERT INTO users (username, password) VALUES (%s, %s)",
+    #         ("default_user", "password123"),
+    #     )
 
     # Remove groups and group_members tables
     cursor.execute(
@@ -47,7 +47,7 @@ def create_tables():
             user_id INT NOT NULL,
             message TEXT NOT NULL,
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            file_path VARCHAR(255) NOT NULL,
+            file_path VARCHAR(255),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
@@ -61,6 +61,7 @@ def create_tables():
             receiver_id INT NOT NULL,
             message TEXT NOT NULL,
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            file_path VARCHAR(255),
             FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
         );

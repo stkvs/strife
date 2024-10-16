@@ -67,19 +67,19 @@ $result_group_messages = $conn->query($sql_group_messages);
             var xhr = new XMLHttpRequest();
             xhr.open("GET", `./php/fetchMessages.php?last_timestamp=${encodeURIComponent(lastTimestamp)}`, true);
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    const messages = response.messages;
-                    lastTimestamp = response.latest_timestamp;
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                const messages = response.messages;
+                lastTimestamp = response.latest_timestamp;
 
-                    const messageList = document.getElementById("messageList");
+                const messageList = document.getElementById("messageList");
 
-                    messages.forEach(msg => {
-                        const newMessage = document.createElement("li");
-                        newMessage.innerHTML = msg;
-                        messageList.appendChild(newMessage);
-                    });
-                }
+                messages.forEach(msg => {
+                const newMessage = document.createElement("li");
+                newMessage.innerHTML = msg;
+                messageList.insertBefore(newMessage, messageList.firstChild);
+                });
+            }
             };
             xhr.send();
         }
@@ -135,7 +135,10 @@ $result_group_messages = $conn->query($sql_group_messages);
     <div class="sidebar">
         <p><a href="private.php">Private Messages</a></p>
         <p><a href="./php/logout.php">Logout</a></p>
+        <button class="settings">ads</button>
     </div>
+
+    <script src="./js/themeModal.js"></script>
 
     <?php if ($is_admin): ?>
     <!-- Modal for Admins -->

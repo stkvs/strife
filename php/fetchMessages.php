@@ -7,8 +7,7 @@ $current_user = $_SESSION['username'];
 // Get the last message timestamp or ID from the request
 $last_timestamp = isset($_GET['last_timestamp']) ? $_GET['last_timestamp'] : '1970-01-01 00:00:00'; // Default to epoch if not set
 
-// Set a time limit for long polling (e.g., 30 seconds)
-$timeout = 30;
+$timeout = 1;
 $start_time = time();
 
 // Main loop for long polling
@@ -19,7 +18,7 @@ while (true) {
                            JOIN users u ON gm.user_id = u.id
                            WHERE gm.sent_at > ?
                            ORDER BY gm.sent_at ASC
-                           LIMIT 10"; // Limit results for performance
+                           LIMIT 10";
 
     $stmt = $conn->prepare($sql_group_messages);
     $stmt->bind_param("s", $last_timestamp);
@@ -32,38 +31,33 @@ while (true) {
         $messages = [];
         $latest_timestamp = ''; // Track the latest timestamp
 
+        // Fetch all usernames for mention handling
+        $sql_users = "SELECT username FROM users";
+        $user_result = $conn->query($sql_users);
+        $users = [];
+        while ($user = $user_result->fetch_assoc()) {
+            $users[$user['username']] = true;
+        }
+
         // Output messages
         while ($message = $result_group_messages->fetch_assoc()) {
             $message_text = htmlspecialchars($message['message']);
             $highlight_class = '';
 
-            // Handle mentions
+            // Handle mentions in a single pass
             preg_match_all('/@(\w+)/', $message['message'], $mentions);
             foreach ($mentions[1] as $mention) {
-                $sql_check_user = "SELECT username FROM users WHERE BINARY username = ?";
-                $stmt_check = $conn->prepare($sql_check_user);
-                $stmt_check->bind_param("s", $mention);
-                $stmt_check->execute();
-                $result_check_user = $stmt_check->get_result();
-
-                if ($result_check_user->num_rows > 0) {
+                if (isset($users[$mention])) {
                     $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', '<span class="mention">@' . $mention . '</span>', $message_text);
                     if ($mention === $current_user) {
                         $highlight_class = 'highlight';
                     }
                 }
-
-                $stmt_check->close();
             }
 
             // Convert URLs to clickable links
-            if (substr_count($message['message'], '.') > 2 || 
-                strpos($message['message'], 'https') !== false || 
-                strpos($message['message'], 'http') !== false || 
-                strpos($message['message'], 'www') !== false) {
-                $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
-                $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
-            }
+            $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
+            $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
 
             // Prepare message output
             $output = "<li class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
@@ -93,7 +87,7 @@ while (true) {
                 }
             }
 
-            $output .= " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li><br>"; // Add line break for spacing
+            $output .= " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>"; // Remove extra break
             $messages[] = $output; // Add to messages array
 
             // Update the latest timestamp

@@ -1,454 +1,456 @@
 /* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
 }
 
 ::-webkit-scrollbar {
-    width: 0;
+  width: 0;
 }
 
 html {
-    color-scheme: dark;
+  color-scheme: dark;
 }
 
 /* Body Styling */
 body {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-    background-color: #2f3136; /* Discord dark background */
-    color: #ffffff; /* White text */
-    padding: 0;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background-color: #2f3136; /* Discord dark background */
+  color: #ffffff; /* White text */
+  padding: 0;
 }
 
 /* Shared Section Styling for Login and Register */
 #login,
 #register {
-    background-color: #202225; /* Slightly darker background */
-    padding: 40px 40px;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  background-color: #202225; /* Slightly darker background */
+  padding: 40px 40px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 h2 {
-    color: #ffffff;
-    margin-bottom: 24px;
-    font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  font-size: 24px;
 }
 
 p {
-    color: #b9bbbe; /* Light gray for instructions */
-    margin-bottom: 10px;
-    font-size: 16px;
+  color: #b9bbbe; /* Light gray for instructions */
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 
 hr {
-    border: 0;
-    border-top: 1px solid #4f545c;
-    margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #4f545c;
+  margin: 20px 0;
 }
 
 h3 {
-    color: #b9bbbe;
-    margin: 16px 0 10px;
-    font-size: 16px;
+  color: #b9bbbe;
+  margin: 16px 0 10px;
+  font-size: 16px;
 }
 
 a {
-    color: #5865f2; /* Discord blue */
-    text-decoration: none;
+  color: #5865f2; /* Discord blue */
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Form Styling */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 input[type="text"],
 input[type="password"] {
-    padding: 12px 15px;
-    background-color: #40444b;
-    color: #dcddde;
-    border: 1px solid #4f545c;
-    border-radius: 5px;
-    outline: none;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
-    width: 100%;
+  padding: 12px 15px;
+  background-color: #40444b;
+  color: #dcddde;
+  border: 1px solid #4f545c;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  width: 100%;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-    border-color: #5865f2;
+  border-color: #5865f2;
 }
 
 button {
-    padding: 12px 20px;
-    background-color: #5865f2; /* Discord blue */
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-    width: 100%;
+  padding: 12px 20px;
+  background-color: #5865f2; /* Discord blue */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  width: 100%;
 }
 
 button:hover {
-    background-color: #4752c4;
+  background-color: #4752c4;
 }
 
 button:active {
-    background-color: #3b44a1;
+  background-color: #3b44a1;
 }
 
 /* Add Responsiveness for smaller screens */
 @media screen and (max-width: 1024px) {
-    #login,
-    #register {
-        width: 90%;
-        padding: 20px;
-    }
+  #login,
+  #register {
+    width: 90%;
+    padding: 20px;
+  }
 }
 
 h2 {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 /* Add Responsiveness for smaller screens */
 @media screen and (max-width: 1024px) {
-    .sidebar {
-        width: 60px; /* Smaller sidebar on mobile */
-        padding: 10px 0;
-    }
+  .sidebar {
+    width: 60px; /* Smaller sidebar on mobile */
+    padding: 10px 0;
+  }
 }
 
 /* User Sidebar */
 .user-sidebar {
-    position: fixed;
-    right: 0;
-    width: 250px;
-    background-color: #202225;
-    padding: 20px;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  position: fixed;
+  right: 0;
+  width: 250px;
+  background-color: #202225;
+  padding: 20px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .user-sidebar h2 {
-    color: white;
+  color: white;
 }
 
 .user-sidebar p {
-    color: #b9bbbe;
-    font-size: 14px;
+  color: #b9bbbe;
+  font-size: 14px;
 }
 
 .user-sidebar img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
-#adminModal, #modModal {
-    padding: 16px;
-    border-radius: 0.5rem;
-    background-color: #202225;
-    /* display: none; */
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    z-index: +1;
+#adminModal,
+#modModal {
+  padding: 16px;
+  border-radius: 0.5rem;
+  background-color: #202225;
+  /* display: none; */
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: +1;
 }
 
-#adminModal input, #modModal input {
-    padding: 10px 20px;
-    background-color: #5865f2; /* Discord blue */
-    border: none;
-    color: #ffffff;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+#adminModal input,
+#modModal input {
+  padding: 10px 20px;
+  background-color: #5865f2; /* Discord blue */
+  border: none;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
 }
 
 .settings {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: unset;
-    padding: unset;
-    border-radius: unset;
-    width: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: unset;
+  padding: unset;
+  border-radius: unset;
+  width: unset;
 }
 
 .settings svg {
-    height: 32px;
-    width: 32px;
+  height: 32px;
+  width: 32px;
 }
 
 .settings:hover {
-    background-color: unset;
+  background-color: unset;
 }
 
 /* Additional Styling for Logout and other elements */
 p {
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 10px;
+  text-align: center;
 }
 
 p a {
-    color: #5865f2;
-    text-decoration: none;
+  color: #5865f2;
+  text-decoration: none;
 }
 
 p a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .settingsModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    background-color: #202225;  
-    padding: 16px;
-    border-radius: 0.5rem
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  background-color: #202225;
+  padding: 16px;
+  border-radius: 0.5rem;
 }
 
 /* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
 }
 
 /* Body Styling */
 body {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-    background-color: #2f3136; /* Discord dark background */
-    color: #ffffff; /* White text */
-    padding: 0;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background-color: #2f3136; /* Discord dark background */
+  color: #ffffff; /* White text */
+  padding: 0;
 }
 
 /* Left Sidebar */
 .sidebar {
-    width: 240px;
-    background-color: #202225; /* Slightly darker gray */
-    padding: 20px 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
-    position: fixed;
-    height: 100%;
+  width: 240px;
+  background-color: #202225; /* Slightly darker gray */
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+  position: fixed;
+  height: 100%;
+  left: 0;
 }
 
 .sidebar a {
-    color: #b9bbbe; /* Light gray links */
-    text-decoration: none;
-    display: block;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+  color: #b9bbbe; /* Light gray links */
+  text-decoration: none;
+  display: block;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .sidebar a:hover {
-    background-color: #3a3d42;
+  background-color: #3a3d42;
 }
 
 /* Main Chat Area */
 .container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
-    padding-left: 270px; /* Space for the sidebar */
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  padding-left: 270px; /* Space for the sidebar */
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 .highlight {
-    border: 2px solid orange;
-    padding: 5px;
+  border: 2px solid orange;
+  padding: 5px;
 }
 
 .mention {
-    color: #5865f2;
-    font-weight: bold;
+  color: #5865f2;
+  font-weight: bold;
 }
 
 /* Chat Messages */
 #messageList {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 10px;
-    overflow-y: auto;
-    max-height: 70vh;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 70vh;
 }
 
 #messageList li {
-    padding: 12px;
-    border-radius: 10px;
-    background-color: #40444b; /* Dark gray background for messages */
-    margin-bottom: 5px;
-    word-wrap: break-word;
-    max-width: 60%;
-    display: inline-block;
-    transition: background-color 0.3s ease;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #40444b; /* Dark gray background for messages */
+  margin-bottom: 5px;
+  word-wrap: break-word;
+  max-width: 60%;
+  display: inline-block;
+  transition: background-color 0.3s ease;
 }
 
 #messageList li.user {
-    background-color: #5865f2; /* Blue color for user messages */
-    color: white;
-    align-self: flex-end;
+  background-color: #5865f2; /* Blue color for user messages */
+  color: white;
+  align-self: flex-end;
 }
 
 #messageList li:hover {
-    background-color: #3a3d42;
+  background-color: #3a3d42;
 }
 
 #messageList li b {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Message Timestamps */
 #messageList i {
-    font-size: 12px;
-    color: #6e737a; /* Lighter gray for timestamps */
+  font-size: 12px;
+  color: #6e737a; /* Lighter gray for timestamps */
 }
 
 /* Textarea for message input */
 #messageForm {
-    margin-top: 16px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-    flex-direction: unset;
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-direction: unset;
 }
 
 textarea {
-    height: 36px;
-    padding: 10px;
-    background-color: #40444b;
-    color: #dcddde;
-    border: 1px solid #4f545c;
-    border-radius: 5px;
-    resize: none;
-    width: 80%;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease;
+  height: 36px;
+  padding: 10px;
+  background-color: #40444b;
+  color: #dcddde;
+  border: 1px solid #4f545c;
+  border-radius: 5px;
+  resize: none;
+  width: 80%;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
 textarea:focus {
-    border-color: #5865f2; /* Blue outline on focus */
+  border-color: #5865f2; /* Blue outline on focus */
 }
 
 input[type="button"] {
-    padding: 10px 20px;
-    background-color: #5865f2; /* Discord blue */
-    border: none;
-    color: #ffffff;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+  padding: 10px 20px;
+  background-color: #5865f2; /* Discord blue */
+  border: none;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
 }
 
 input[type="button"]:hover {
-    background-color: #4752c4;
+  background-color: #4752c4;
 }
 
 input[type="button"]:active {
-    background-color: #3b44a1;
+  background-color: #3b44a1;
 }
 
 /* Right Sidebar (User Info) */
 .user-sidebar {
-    position: fixed;
-    right: 0;
-    width: 250px;
-    background-color: #202225;
-    padding: 20px;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  position: fixed;
+  right: 0;
+  width: 250px;
+  background-color: #202225;
+  padding: 20px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .user-sidebar h2 {
-    color: white;
+  color: white;
 }
 
 .user-sidebar p {
-    color: #b9bbbe;
-    font-size: 14px;
+  color: #b9bbbe;
+  font-size: 14px;
 }
 
 .user-sidebar img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
 /* Add Responsiveness for smaller screens */
 @media screen and (max-width: 1024px) {
-    .container {
-        padding-left: 20px; /* Remove space for sidebar on smaller screens */
-    }
+  .container {
+    padding-left: 20px; /* Remove space for sidebar on smaller screens */
+  }
 
-    .user-sidebar {
-        display: none; /* Hide right sidebar on smaller screens */
-    }
+  .user-sidebar {
+    display: none; /* Hide right sidebar on smaller screens */
+  }
 
-    .sidebar {
-        width: 60px; /* Smaller sidebar on mobile */
-        padding: 10px 0;
-    }
+  .sidebar {
+    width: 60px; /* Smaller sidebar on mobile */
+    padding: 10px 0;
+  }
 }
 
 /* Additional Styling for Logout and other elements */
 p {
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 10px;
+  text-align: center;
 }
 
 p a {
-    color: #5865f2;
-    text-decoration: none;
+  color: #5865f2;
+  text-decoration: none;
 }
 
 p a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
-
