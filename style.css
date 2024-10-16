@@ -266,6 +266,11 @@ body {
     position: relative;
 }
 
+.highlight {
+    border: 2px solid orange;
+    padding: 5px;
+}
+
 .mention {
     color: #5865f2;
     font-weight: bold;
