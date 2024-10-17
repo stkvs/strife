@@ -13,9 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $file_path = null;
 
-    // Check if a file is uploaded
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        // Define allowed file types
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'video/mp4', 'audio/mp4'];
         $file_type = $_FILES['file']['type'];
 
@@ -24,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit;
         }
 
-        // Define upload directory
         $upload_dir = '../uploads/';
         if (!is_dir($upload_dir)) {
             if (!mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
@@ -33,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Move uploaded file to the designated directory
         $file_name = basename($_FILES['file']['name']);
         $file_path = $upload_dir . uniqid() . "_" . $file_name;
 
@@ -43,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Prepare and execute database insertion
     $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message, file_path) VALUES (?, ?, ?)");
     if ($stmt === false) {
         echo json_encode(["status" => "error", "message" => "Error preparing the statement: " . $conn->error]);
@@ -56,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(["status" => "success", "message" => "Message sent successfully!"]);
     } else {
         echo json_encode(["status" => "error", "message" => "Error executing query: " . $stmt->error]);
-        // Log error for further investigation
         error_log("Database Insert Error: " . $stmt->error);
     }
 

@@ -33,7 +33,7 @@ function sendMessage() {
         var response = JSON.parse(xhr.responseText);
         if (response.status === "success") {
           document.getElementById("messageInput").value = "";
-          document.getElementById("fileInput").value = ""; // Clear the file input
+          document.getElementById("fileInput").value = "";
         } else {
           alert("Error: " + response.message);
         }

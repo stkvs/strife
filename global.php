@@ -10,7 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
-// Check if the user is an admin or mod
 $is_admin = false;
 $is_mod = false;
 
