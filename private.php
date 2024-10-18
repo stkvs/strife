@@ -32,6 +32,7 @@ $stmt_users->close();
         const messageForm = document.getElementById('privateMessageForm');
         const messageInput = messageForm.querySelector('textarea[name="private_message"]');
         const receiverIdInput = messageForm.querySelector('input[name="receiver_id"]');
+        const fileInput = messageForm.querySelector('input[name="file"]');
         const userButtons = document.querySelectorAll('button[name="select_user"]');
 
         userButtons.forEach(button => {
@@ -40,6 +41,7 @@ $stmt_users->close();
                 const selectedUserId = this.value;
                 receiverIdInput.value = selectedUserId; 
                 fetchPrivateMessages(selectedUserId);
+                startMessagePolling(selectedUserId);
             });
         });
 
@@ -59,6 +61,7 @@ $stmt_users->close();
                 if (data.status === 'success') {
                     fetchPrivateMessages(receiverIdInput.value);
                     messageInput.value = '';
+                    fileInput.value = ''; 
                 } else {
                     alert(data.message); 
                 }
@@ -90,6 +93,15 @@ $stmt_users->close();
                     messageList.scrollTop = messageList.scrollHeight;
                 })
                 .catch(error => console.error('Error fetching messages:', error));
+        }
+
+        function startMessagePolling(selectedUserId) {
+            if (window.messagePollingInterval) {
+                clearInterval(window.messagePollingInterval);
+            }
+            window.messagePollingInterval = setInterval(() => {
+                fetchPrivateMessages(selectedUserId);
+            }, 1000);
         }
     });
     </script>
