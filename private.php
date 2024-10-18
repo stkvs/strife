@@ -100,7 +100,7 @@ $stmt_users->close();
 
         <div class="messages">
             <h3>Your Private Messages</h3>
-            <ul id="messageList">
+            <ul id="messageList" style="flex-direction: column;">
                 <!-- Messages will be dynamically loaded here -->
             </ul>
             <form id="privateMessageForm" enctype="multipart/form-data">
