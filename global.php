@@ -202,6 +202,7 @@ $result_group_messages = $conn->query($sql_group_messages);
             modal.style.display = "block";
         }
     </script>
+    <script src="./js/pushChatScroll.js"></script>
     <?php endif; ?>
 
     <?php if ($is_mod && !$is_admin): ?>
