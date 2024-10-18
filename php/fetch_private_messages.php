@@ -59,23 +59,6 @@ while ($row = $result_private_messages->fetch_assoc()) {
         }
     }
 
-    $highlight_class = '';
-
-    preg_match_all('/@(\w+)/', $message['message'], $mentions);
-    foreach ($mentions[1] as $mention) {
-        if (isset($users[$mention])) {
-            $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', "<span class=\"mention\">@$mention</span>", $message_text);
-            if ($mention === $current_user) {
-                $highlight_class = 'highlight';
-            }
-        }
-    }
-
-    $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
-    $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
-
-    $output = "<li class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
-
     $output .= " <i>(" . date('Y-m-d H:i:s', $row['sent_at']) . ")</i></li>"; 
     $private_messages[] = $output;
 }
