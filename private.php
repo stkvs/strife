@@ -53,46 +53,47 @@ $stmt_users->close();
     <link rel="stylesheet" href="style.css">
     <script src="./js/themeModal.js"></script>
     <script>
-        document.getElementById('privateMessageForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('privateMessageForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
 
-            const formData = new FormData(this);
-            console.log('Sending data:', Object.fromEntries(formData)); // Log the form data being sent
+                const formData = new FormData(this);
+                console.log('Sending data:', Object.fromEntries(formData)); // Log the form data being sent
 
-            fetch('./php/send_private_message.php', {
-                method: 'POST',
-                body: formData // Send the form data
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Response:', data); // Log the response from the server
-                if (data.status === 'success') {
-                    alert(data.message); // Show success message
-                    // Optionally, you can fetch and display messages again if needed.
-                } else {
-                    alert(data.message); // Show error message
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-
-
-        function fetchPrivateMessages(selectedUserId) {
-            fetch(`./php/fetch_private_messages.php?user_id=${selectedUserId}`)
+                fetch('./php/send_private_message.php', {
+                    method: 'POST',
+                    body: formData // Send the form data
+                })
                 .then(response => response.json())
                 .then(data => {
-                    const messageList = document.getElementById('messageList');
-                    messageList.innerHTML = ''; // Clear existing messages
-                    data.forEach(message => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<b>${message.sender}:</b> ${message.message} <i>(${message.sent_at})</i>`;
-                        messageList.appendChild(li);
-                    });
+                    console.log('Response:', data); // Log the response from the server
+                    if (data.status === 'success') {
+                        alert(data.message); // Show success message
+                        fetchPrivateMessages(<?php echo json_encode($selected_user_id); ?>); // Fetch and display messages again
+                    } else {
+                        alert(data.message); // Show error message
+                    }
                 })
-                .catch(error => console.error('Error fetching messages:', error));
-        }
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            function fetchPrivateMessages(selectedUserId) {
+                fetch(`./php/fetch_private_messages.php?user_id=${selectedUserId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const messageList = document.getElementById('messageList');
+                        messageList.innerHTML = ''; // Clear existing messages
+                        data.forEach(message => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `<b>${message.sender}:</b> ${message.message} <i>(${message.sent_at})</i>`;
+                            messageList.appendChild(li);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching messages:', error));
+            }
+        });
     </script>
 </head>
 <body>

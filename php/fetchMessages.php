@@ -4,7 +4,7 @@ include './db.php';
 
 $current_user = $_SESSION['username'];
 
-$last_timestamp = isset($_GET['last_timestamp']) ? $_GET['last_timestamp'] : '1970-01-01 00:00:00'; 
+$last_timestamp = $_GET['last_timestamp'] ?? '1970-01-01 00:00:00';
 
 $timeout = 1;
 $start_time = time();
@@ -14,8 +14,8 @@ while (true) {
                            FROM group_messages gm
                            JOIN users u ON gm.user_id = u.id
                            WHERE gm.sent_at > ?
-                           ORDER BY gm.sent_at ASC
-                           LIMIT 10";
+                           ORDER BY gm.sent_at DESC
+                           LIMIT 25";
 
     $stmt = $conn->prepare($sql_group_messages);
     $stmt->bind_param("s", $last_timestamp);
@@ -40,7 +40,7 @@ while (true) {
             preg_match_all('/@(\w+)/', $message['message'], $mentions);
             foreach ($mentions[1] as $mention) {
                 if (isset($users[$mention])) {
-                    $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', '<span class="mention">@' . $mention . '</span>', $message_text);
+                    $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', "<span class=\"mention\">@$mention</span>", $message_text);
                     if ($mention === $current_user) {
                         $highlight_class = 'highlight';
                     }
@@ -81,7 +81,7 @@ while (true) {
         }
 
         header('Content-Type: application/json');
-        echo json_encode(['messages' => $messages, 'latest_timestamp' => $latest_timestamp]);
+        echo json_encode(['messages' => array_reverse($messages), 'latest_timestamp' => $latest_timestamp]);
         exit; 
     }
 
