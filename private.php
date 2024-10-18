@@ -17,31 +17,6 @@ $stmt_users->bind_param("i", $user_id);
 $stmt_users->execute();
 $result_users = $stmt_users->get_result();
 
-// Handle selected user for private messaging
-$selected_user_id = null;
-$private_messages = [];
-
-if (isset($_POST['select_user'])) {
-    $selected_user_id = $_POST['select_user'];
-    // Fetch messages between users
-    $sql_private_messages = "
-        SELECT pm.message, u.username AS sender, pm.sent_at
-        FROM private_messages pm
-        JOIN users u ON pm.sender_id = u.id
-        WHERE (pm.sender_id = ? AND pm.receiver_id = ?)
-        OR (pm.sender_id = ? AND pm.receiver_id = ?)
-        ORDER BY pm.sent_at ASC"; // Order by sent_at ASC to show newest at the bottom
-    $stmt_private_messages = $conn->prepare($sql_private_messages);
-    $stmt_private_messages->bind_param("iiii", $user_id, $selected_user_id, $selected_user_id, $user_id);
-    $stmt_private_messages->execute();
-    $result_private_messages = $stmt_private_messages->get_result();
-    
-    while ($row = $result_private_messages->fetch_assoc()) {
-        $private_messages[] = $row;
-    }
-    $stmt_private_messages->close();
-}
-
 $stmt_users->close();
 ?>
 
@@ -56,6 +31,17 @@ $stmt_users->close();
         document.addEventListener('DOMContentLoaded', function() {
             const messageForm = document.getElementById('privateMessageForm');
             const messageInput = messageForm.querySelector('textarea[name="private_message"]');
+            const receiverIdInput = messageForm.querySelector('input[name="receiver_id"]');
+            const userButtons = document.querySelectorAll('button[name="select_user"]');
+
+            userButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const selectedUserId = this.value;
+                    receiverIdInput.value = selectedUserId; // Set the receiver ID in the form
+                    fetchPrivateMessages(selectedUserId);
+                });
+            });
 
             messageForm.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
@@ -71,8 +57,8 @@ $stmt_users->close();
                 .then(data => {
                     console.log('Response:', data); // Log the response from the server
                     if (data.status === 'success') {
-                        alert(data.message); // Show success message
-                        fetchPrivateMessages(<?php echo json_encode($selected_user_id); ?>); // Fetch and display messages again
+                        // alert(data.message); // Show success message
+                        fetchPrivateMessages(receiverIdInput.value); // Fetch and display messages again
                         messageInput.value = ''; // Clear the message input
                     } else {
                         alert(data.message); // Show error message
@@ -115,18 +101,10 @@ $stmt_users->close();
         <div class="messages">
             <h3>Your Private Messages</h3>
             <ul id="messageList">
-                <?php
-                if (count($private_messages) > 0) {
-                    foreach ($private_messages as $message) {
-                        echo "<li><b>" . htmlspecialchars($message['sender']) . ":</b> " . htmlspecialchars($message['message']) . " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
-                    }
-                } else {
-                    echo "<li>No private messages yet.</li>";
-                }
-                ?>
+                <!-- Messages will be dynamically loaded here -->
             </ul>
             <form id="privateMessageForm" enctype="multipart/form-data">
-                <input type="hidden" name="receiver_id" value="<?php echo htmlspecialchars($selected_user_id); ?>"> <!-- Replace with actual user ID -->
+                <input type="hidden" name="receiver_id" value=""> <!-- This will be set dynamically -->
                 <textarea name="private_message" required placeholder="Type your message..."></textarea>
                 <input type="file" name="file"> <!-- Optional file upload -->
                 <button type="submit">Send Message</button>
@@ -138,9 +116,7 @@ $stmt_users->close();
             <?php
             if ($result_users->num_rows > 0) {
                 while ($user = $result_users->fetch_assoc()) {
-                    echo '<form method="post" action="" style="display: inline;">
-                            <button type="submit" name="select_user" value="' . htmlspecialchars($user['id']) . '">' . htmlspecialchars($user['username']) . '</button>
-                          </form>';
+                    echo '<button type="button" name="select_user" value="' . htmlspecialchars($user['id']) . '">' . htmlspecialchars($user['username']) . '</button>';
                 }
             } else {
                 echo "<p>No users available.</p>";

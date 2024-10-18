@@ -20,7 +20,7 @@ $user_id = $_SESSION['user_id'];
 $selected_user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
 
 $sql_private_messages = "
-    SELECT pm.message, u.username AS sender, pm.sent_at
+    SELECT pm.message, u.username AS sender, UNIX_TIMESTAMP(pm.sent_at) AS sent_at
     FROM private_messages pm
     JOIN users u ON pm.sender_id = u.id
     WHERE (pm.sender_id = ? AND pm.receiver_id = ?)
@@ -41,4 +41,3 @@ while ($row = $result_private_messages->fetch_assoc()) {
 echo json_encode($private_messages);
 $stmt_private_messages->close();
 $conn->close();
-?>
