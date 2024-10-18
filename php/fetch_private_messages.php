@@ -36,6 +36,48 @@ $private_messages = [];
 while ($row = $result_private_messages->fetch_assoc()) {
     $row['message'] = decryptMessage($row['message'], DECRYPTION_KEY);
     $private_messages[] = $row;
+
+    $message_text = htmlspecialchars($message['message']);
+    $highlight_class = '';
+
+    preg_match_all('/@(\w+)/', $message['message'], $mentions);
+    foreach ($mentions[1] as $mention) {
+        if (isset($users[$mention])) {
+            $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', "<span class=\"mention\">@$mention</span>", $message_text);
+            if ($mention === $current_user) {
+                $highlight_class = 'highlight';
+            }
+        }
+    }
+
+    $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
+    $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
+
+    $output = "<li class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
+
+    if (!empty($message['file_path'])) {
+        $full_file_path = $_SERVER['DOCUMENT_ROOT'] . '/students/2024/spencer/strife/uploads/' . $message['file_path'];
+
+        if (file_exists($full_file_path)) {
+            $file_type = mime_content_type($full_file_path);
+            
+            if (strpos($file_type, 'image') !== false) {
+                $output .= "<br><img src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' alt='image' style='max-width: 200px;' />";
+            } elseif (strpos($file_type, 'audio') !== false) {
+                $output .= "<br><audio controls><source src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' type='$file_type'></audio>";
+            } elseif (strpos($file_type, 'video') !== false) {
+                $output .= "<br><video controls style='max-width: 200px;'><source src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' type='$file_type'></video>";
+            } else {
+                $output .= "<br>Unsupported file type: " . htmlspecialchars($file_type);
+            }
+        } else {
+            $output .= "<br>File does not exist.";
+        }
+    }
+
+    $output .= " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>"; 
+    $messages[] = $output; 
+
 }
 
 echo json_encode($private_messages);
