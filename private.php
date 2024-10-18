@@ -30,7 +30,7 @@ if (isset($_POST['select_user'])) {
         JOIN users u ON pm.sender_id = u.id
         WHERE (pm.sender_id = ? AND pm.receiver_id = ?)
         OR (pm.sender_id = ? AND pm.receiver_id = ?)
-        ORDER BY pm.sent_at ASC";
+        ORDER BY pm.sent_at ASC"; // Order by sent_at ASC to show newest at the bottom
     $stmt_private_messages = $conn->prepare($sql_private_messages);
     $stmt_private_messages->bind_param("iiii", $user_id, $selected_user_id, $selected_user_id, $user_id);
     $stmt_private_messages->execute();
@@ -54,7 +54,10 @@ $stmt_users->close();
     <script src="./js/themeModal.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('privateMessageForm').addEventListener('submit', function(event) {
+            const messageForm = document.getElementById('privateMessageForm');
+            const messageInput = messageForm.querySelector('textarea[name="private_message"]');
+
+            messageForm.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
 
                 const formData = new FormData(this);
@@ -70,6 +73,7 @@ $stmt_users->close();
                     if (data.status === 'success') {
                         alert(data.message); // Show success message
                         fetchPrivateMessages(<?php echo json_encode($selected_user_id); ?>); // Fetch and display messages again
+                        messageInput.value = ''; // Clear the message input
                     } else {
                         alert(data.message); // Show error message
                     }
@@ -77,6 +81,13 @@ $stmt_users->close();
                 .catch(error => {
                     console.error('Error:', error);
                 });
+            });
+
+            messageInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    messageForm.dispatchEvent(new Event('submit'));
+                }
             });
 
             function fetchPrivateMessages(selectedUserId) {
@@ -90,6 +101,7 @@ $stmt_users->close();
                             li.innerHTML = `<b>${message.sender}:</b> ${message.message} <i>(${message.sent_at})</i>`;
                             messageList.appendChild(li);
                         });
+                        messageList.scrollTop = messageList.scrollHeight; // Scroll to the bottom
                     })
                     .catch(error => console.error('Error fetching messages:', error));
             }

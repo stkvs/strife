@@ -2,6 +2,15 @@
 session_start();
 include 'db.php';
 
+define('DECRYPTION_KEY', 'fdadsihuiads');
+
+function decryptMessage($encryptedMessage, $key) {
+    $data = base64_decode($encryptedMessage);
+    $iv = substr($data, 0, openssl_cipher_iv_length('aes-256-cbc'));
+    $encryptedMessage = substr($data, openssl_cipher_iv_length('aes-256-cbc'));
+    return openssl_decrypt($encryptedMessage, 'aes-256-cbc', $key, 0, $iv);
+}
+
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(["status" => "error", "message" => "You must be logged in."]);
     exit;
@@ -25,9 +34,11 @@ $result_private_messages = $stmt_private_messages->get_result();
 
 $private_messages = [];
 while ($row = $result_private_messages->fetch_assoc()) {
+    $row['message'] = decryptMessage($row['message'], DECRYPTION_KEY);
     $private_messages[] = $row;
 }
 
 echo json_encode($private_messages);
 $stmt_private_messages->close();
 $conn->close();
+?>

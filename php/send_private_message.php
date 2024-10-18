@@ -2,6 +2,21 @@
 session_start();
 include 'db.php';
 
+define('ENCRYPTION_KEY', 'fdadsihuiads');
+
+function encryptMessage($message, $key) {
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encryptedMessage = openssl_encrypt($message, 'aes-256-cbc', $key, 0, $iv);
+    return base64_encode($iv . $encryptedMessage);
+}
+
+function decryptMessage($encryptedMessage, $key) {
+    $data = base64_decode($encryptedMessage);
+    $iv = substr($data, 0, openssl_cipher_iv_length('aes-256-cbc'));
+    $encryptedMessage = substr($data, openssl_cipher_iv_length('aes-256-cbc'));
+    return openssl_decrypt($encryptedMessage, 'aes-256-cbc', $key, 0, $iv);
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_SESSION['user_id'])) {
         echo json_encode(["status" => "error", "message" => "You must be logged in to send a message."]);
@@ -45,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
+    // Encrypt the message
+    $encrypted_message = encryptMessage($message, ENCRYPTION_KEY);
+
     $stmt = $conn->prepare("INSERT INTO private_messages (sender_id, receiver_id, message, file_path) VALUES (?, ?, ?, ?)");
 
     if ($stmt === false) {
@@ -52,11 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    if ($file_path === null) {
-        $stmt->bind_param("iis", $user_id, $receiver_id, $message);
-    } else {
-        $stmt->bind_param("iiss", $user_id, $receiver_id, $message, $file_path);
-    }
+    $stmt->bind_param("iiss", $user_id, $receiver_id, $encrypted_message, $file_path);
 
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Message sent successfully!"]);
