@@ -29,69 +29,81 @@ $stmt_users->close();
     <script src="./js/themeModal.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const messageForm = document.getElementById('privateMessageForm');
-            const messageInput = messageForm.querySelector('textarea[name="private_message"]');
-            const receiverIdInput = messageForm.querySelector('input[name="receiver_id"]');
-            const userButtons = document.querySelectorAll('button[name="select_user"]');
+        const messageForm = document.getElementById('privateMessageForm');
+        const messageInput = messageForm.querySelector('textarea[name="private_message"]');
+        const receiverIdInput = messageForm.querySelector('input[name="receiver_id"]');
+        const fileInput = messageForm.querySelector('input[name="file"]');
+        const userButtons = document.querySelectorAll('button[name="select_user"]');
 
-            userButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const selectedUserId = this.value;
-                    receiverIdInput.value = selectedUserId; // Set the receiver ID in the form
-                    fetchPrivateMessages(selectedUserId);
-                });
+        userButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const selectedUserId = this.value;
+                receiverIdInput.value = selectedUserId; 
+                fetchPrivateMessages(selectedUserId);
+                startMessagePolling(selectedUserId);
             });
+        });
 
-            messageForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission
+        messageForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-                const formData = new FormData(this);
-                console.log('Sending data:', Object.fromEntries(formData)); // Log the form data being sent
+            const formData = new FormData(this);
+            console.log('Sending data:', Object.fromEntries(formData));
 
-                fetch('./php/send_private_message.php', {
-                    method: 'POST',
-                    body: formData // Send the form data
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Response:', data); // Log the response from the server
-                    if (data.status === 'success') {
-                        // alert(data.message); // Show success message
-                        fetchPrivateMessages(receiverIdInput.value); // Fetch and display messages again
-                        messageInput.value = ''; // Clear the message input
-                    } else {
-                        alert(data.message); // Show error message
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-
-            messageInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    messageForm.dispatchEvent(new Event('submit'));
+            fetch('./php/send_private_message.php', {
+                method: 'POST',
+                body: formData 
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response:', data);
+                if (data.status === 'success') {
+                    fetchPrivateMessages(receiverIdInput.value);
+                    messageInput.value = '';
+                    fileInput.value = ''; 
+                } else {
+                    alert(data.message); 
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
+        });
 
-            function fetchPrivateMessages(selectedUserId) {
-                fetch(`./php/fetch_private_messages.php?user_id=${selectedUserId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const messageList = document.getElementById('messageList');
-                        messageList.innerHTML = ''; // Clear existing messages
-                        data.forEach(message => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<b>${message.sender}:</b> ${message.message} <i>(${message.sent_at})</i>`;
-                            messageList.appendChild(li);
-                        });
-                        messageList.scrollTop = messageList.scrollHeight; // Scroll to the bottom
-                    })
-                    .catch(error => console.error('Error fetching messages:', error));
+        messageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                messageForm.dispatchEvent(new Event('submit'));
             }
         });
+
+        function fetchPrivateMessages(selectedUserId) {
+            fetch(`./php/fetch_private_messages.php?user_id=${selectedUserId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const messageList = document.getElementById('messageList');
+                    messageList.innerHTML = '';
+
+                    data.forEach(message => {
+                        const li = document.createElement('li');
+                        li.innerHTML = message;
+                        messageList.appendChild(li);
+                    });
+                    messageList.scrollTop = messageList.scrollHeight;
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+
+        function startMessagePolling(selectedUserId) {
+            if (window.messagePollingInterval) {
+                clearInterval(window.messagePollingInterval);
+            }
+            window.messagePollingInterval = setInterval(() => {
+                fetchPrivateMessages(selectedUserId);
+            }, 1000);
+        }
+    });
     </script>
 </head>
 <body>
