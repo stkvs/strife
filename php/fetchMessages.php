@@ -53,17 +53,18 @@ while (true) {
             $output = "<span class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
 
             if (!empty($message['file_path'])) {
-                $full_file_path = $_SERVER['DOCUMENT_ROOT'] . '/students/2024/spencer/strife/uploads/' . $message['file_path'];
+                $path = '/strife/uploads/';
+                $full_file_path = $_SERVER['DOCUMENT_ROOT'] . $path . $message['file_path'];
 
                 if (file_exists($full_file_path)) {
                     $file_type = mime_content_type($full_file_path);
                     
                     if (strpos($file_type, 'image') !== false) {
-                        $output .= "<br><img src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' alt='image' style='max-width: 200px;' />";
+                        $output .= "<br><img src='$path" . htmlspecialchars($message['file_path']) . "' alt='image' style='max-width: 200px;' />";
                     } elseif (strpos($file_type, 'audio') !== false) {
-                        $output .= "<br><audio controls><source src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' type='$file_type'></audio>";
+                        $output .= "<br><audio controls><source src='$path" . htmlspecialchars($message['file_path']) . "' type='$file_type'></audio>";
                     } elseif (strpos($file_type, 'video') !== false) {
-                        $output .= "<br><video controls style='max-width: 200px;'><source src='/students/2024/spencer/strife/uploads/" . htmlspecialchars($message['file_path']) . "' type='$file_type'></video>";
+                        $output .= "<br><video controls style='max-width: 200px;'><source src='$path" . htmlspecialchars($message['file_path']) . "' type='$file_type'></video>";
                     } else {
                         $output .= "<br>Unsupported file type: " . htmlspecialchars($file_type);
                     }

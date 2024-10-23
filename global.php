@@ -69,30 +69,7 @@ $result_group_messages = $conn->query($sql_group_messages);
         <h3>Public Chat</h3>
         <ul id="messageList">
             <?php
-            if ($result_group_messages->num_rows > 0) {
-                while ($message = $result_group_messages->fetch_assoc()) {
-                    echo "<li><b>" . htmlspecialchars($message['username']) . ":</b> ";
-                    
-                    // Check if it's a text message
-                    if (!empty($message['message'])) {
-                        echo htmlspecialchars($message['message']);
-                    }
-
-                    // Check if it's a file (image, audio, video)
-                    if (!empty($message['file_path'])) {
-                        $file_type = mime_content_type($message['file_path']);
-                        if (strpos($file_type, 'image') !== false) {
-                            echo "<br><img src='" . htmlspecialchars($message['file_path']) . "' alt='image' style='max-width: 200px;'/>";
-                        } elseif (strpos($file_type, 'audio') !== false) {
-                            echo "<br><audio controls><source src='" . htmlspecialchars($message['file_path']) . "' type='" . htmlspecialchars($file_type) . "'></audio>";
-                        } elseif (strpos($file_type, 'video') !== false) {
-                            echo "<br><video controls style='max-width: 200px;'><source src='" . htmlspecialchars($message['file_path']) . "' type='" . htmlspecialchars($file_type) . "'></video>";
-                        }
-                    }
-
-                    echo " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>";
-                }
-            } else {
+            if (!$result_group_messages->num_rows > 0) {
                 echo "<li>No messages in the public group yet.</li>";
             }
             ?>
@@ -112,7 +89,7 @@ $result_group_messages = $conn->query($sql_group_messages);
         <!-- <button class="settings">ads</button> -->
     </div>
 
-    <script src="./js/themeModal.js"></script>
+    <!-- <script src="./js/themeModal.js"></script> -->
 
     <?php if ($is_admin): ?>
     <!-- Modal for Admins -->
