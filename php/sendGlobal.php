@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $conn->prepare("INSERT INTO group_messages (user_id, message, file_path) VALUES (?, ?, ?)");
     if ($stmt === false) {
-        echo json_encode(["status" => "error", "message" => "Error preparing the statement: " . $conn->error]);
+        echo json_encode(["status" => "error", "message" => "Error preparing the statement: {$conn->error}"]);
         exit;
     }
 
@@ -50,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Message sent successfully!"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error executing query: " . $stmt->error]);
-        error_log("Database Insert Error: " . $stmt->error);
+        echo json_encode(["status" => "error", "message" => "Error executing query: {$stmt->error}"]);
+        error_log("Database Insert Error: {$stmt->error}");
     }
 
     $stmt->close();

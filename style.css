@@ -301,12 +301,12 @@ body {
 
 .highlight {
   border: 2px solid orange;
-  padding: 5px;
 }
 
 .mention {
   color: #5865f2;
   font-weight: bold;
+  padding: unset;
 }
 
 /* Chat Messages */
@@ -318,7 +318,7 @@ body {
   max-height: 70vh;
 }
 
-#messageList li {
+#messageList li span:not(.mention) {
   padding: 12px;
   border-radius: 10px;
   background-color: #40444b; /* Dark gray background for messages */
@@ -335,7 +335,7 @@ body {
   align-self: flex-end;
 }
 
-#messageList li:hover {
+#messageList li span:hover {
   background-color: #3a3d42;
 }
 

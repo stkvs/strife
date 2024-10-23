@@ -1,13 +1,36 @@
 import mysql.connector
 from mysql.connector import errorcode
+import json
+import os
 
-# Database connection configuration
+# Correct the path to the JSON file
+json_path = os.path.join(os.path.dirname(__file__), '..', 'dbinfo.json')
+
+try:
+    with open(json_path, "r") as file:
+        db_info = json.load(file)
+except FileNotFoundError:
+    print(f"File not found: {json_path}")
+    exit(1)
+except json.JSONDecodeError:
+    print(f"Error decoding JSON from file: {json_path}")
+    exit(1)
+
+# Ensure the required keys are in the JSON
+required_keys = ["host", "user", "password"]
+for key in required_keys:
+    if key not in db_info:
+        print(f"Missing required key in JSON: {key}")
+        exit(1)
+
 config = {
-    'user': 'root',
-    'password': '',
-    'host': 'localhost',
-    'database': 'messaging_app'
+    "host": db_info["host"],
+    "user": db_info["user"],
+    "password": db_info["password"],
+    "database": "messaging_app"
 }
+
+conn = None
 
 try:
     # Connect to the database
@@ -35,6 +58,6 @@ except mysql.connector.Error as err:
         print(err)
 finally:
     # Close the connection
-    if conn.is_connected():
+    if conn is not None and conn.is_connected():
         cursor.close()
         conn.close()

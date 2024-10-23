@@ -1,21 +1,38 @@
+import json
 import mysql.connector
+import os
+def get_db_info():
+    # Correct the path to the JSON file
+    json_path = os.path.join(os.path.dirname(__file__), '..', 'dbinfo.json')
 
+    try:
+        with open(json_path, "r") as file:
+            db_info = json.load(file)
+            return db_info
+    except FileNotFoundError:
+        print(f"File not found: {json_path}")
+        exit(1)
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON from file: {json_path}")
+        exit(1)
 
 def connect_to_db():
+    db_info = get_db_info()
     conn = mysql.connector.connect(
-        host="localhost", user="root", password="", database="messaging_app"
+        host=db_info["host"], user=db_info["user"], password=db_info["password"], database="messaging_app"
     )
     return conn
 
-
 def create_database():
-    conn = mysql.connector.connect(host="localhost", user="root", password="")
+    db_info = get_db_info()
+    conn = mysql.connector.connect(
+        host=db_info["host"], user=db_info["user"], password=db_info["password"]
+    )
     cursor = conn.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS messaging_app")
     conn.commit()
     cursor.close()
     conn.close()
-
 
 def create_tables():
     conn = connect_to_db()
@@ -32,14 +49,6 @@ def create_tables():
         """
     )
 
-    # cursor.execute("SELECT COUNT(*) FROM users")
-    # if cursor.fetchone()[0] == 0:
-    #     cursor.execute(
-    #         "INSERT INTO users (username, password) VALUES (%s, %s)",
-    #         ("default_user", "password123"),
-    #     )
-
-    # Remove groups and group_members tables
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS group_messages (
@@ -81,8 +90,10 @@ def create_tables():
     cursor.close()
     conn.close()
 
-
 if __name__ == "__main__":
-    create_database()
-    create_tables()
-    print("Database and tables created successfully!")
+    try:
+        create_database()
+        create_tables()
+        print("Database and tables created successfully!")
+    except FileNotFoundError as e:
+        print(e)

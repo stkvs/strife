@@ -109,7 +109,7 @@ $result_group_messages = $conn->query($sql_group_messages);
     <div class="sidebar">
         <p><a href="private.php">Private Messages</a></p>
         <p><a href="./php/logout.php">Logout</a></p>
-        <button class="settings">ads</button>
+        <!-- <button class="settings">ads</button> -->
     </div>
 
     <script src="./js/themeModal.js"></script>

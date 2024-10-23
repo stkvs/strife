@@ -50,7 +50,7 @@ while (true) {
             $message_text = preg_replace('/(https?:\/\/[^\s]+)/', '<a href="$1" class="link" target="_blank">$1</a>', $message_text);
             $message_text = preg_replace('/\b(www\.[^\s]+)/', '<a href="http://$1" class="link" target="_blank">$1</a>', $message_text);
 
-            $output = "<li class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
+            $output = "<span class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
 
             if (!empty($message['file_path'])) {
                 $full_file_path = $_SERVER['DOCUMENT_ROOT'] . '/students/2024/spencer/strife/uploads/' . $message['file_path'];
@@ -72,7 +72,7 @@ while (true) {
                 }
             }
 
-            $output .= " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></li>"; 
+            $output .= " <i>(" . htmlspecialchars($message['sent_at']) . ")</i></span>"; 
             $messages[] = $output; 
 
             if ($latest_timestamp === '' || $message['sent_at'] > $latest_timestamp) {
