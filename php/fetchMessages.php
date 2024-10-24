@@ -54,7 +54,7 @@ while (true) {
             $output = "<span class=\"$highlight_class\"><b>" . htmlspecialchars($message['username']) . ":</b> " . $message_text;
 
             if (!empty($message['file_path'])) {
-                $path = '/strife/uploads/';
+                $path = '/projects/strife/uploads/';
                 $full_file_path = $_SERVER['DOCUMENT_ROOT'] . $path . $message['file_path'];
 
                 if (file_exists($full_file_path)) {
