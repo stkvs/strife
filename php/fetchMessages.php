@@ -38,9 +38,10 @@ while (true) {
             $highlight_class = '';
 
             preg_match_all('/@(\w+)/', $message['message'], $mentions);
-            foreach ($mentions[1] as $mention) {
+            $unique_mentions = array_unique($mentions[1]);
+            foreach ($unique_mentions as $mention) {
                 if (isset($users[$mention])) {
-                    $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', "<span class=\"mention\">@$mention</span>", $message_text);
+                    $message_text = preg_replace('/@' . preg_quote($mention, '/') . '/', "<span class=\"mention\">@$mention</span>", $message_text, 1);
                     if ($mention === $current_user) {
                         $highlight_class = 'highlight';
                     }
