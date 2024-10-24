@@ -49,7 +49,7 @@ while (true) {
             $output = "<li><b>" . htmlspecialchars($row['sender']) . ":</b> " . $message_text;
 
             if (!empty($row['file_path'])) {
-                $path = '/strife/uploads/';
+                $path = '/projects/strife/uploads/';
                 $full_file_path = $_SERVER['DOCUMENT_ROOT'] . $path . $row['file_path'];
 
                 if (file_exists($full_file_path)) {
