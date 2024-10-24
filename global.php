@@ -99,7 +99,7 @@ $result_group_messages = $conn->query($sql_group_messages);
             <p>Welcome, Admin <?php echo htmlspecialchars($username); ?>!</p>
             <hr>
             <h3>Admin Actions</h3>
-            <p>Kick a user</p>
+            <p>Remove a user</p>
             <?php
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_to_kick'])) {
                     $user_to_kick = $_POST['user_to_kick'];
@@ -162,7 +162,8 @@ $result_group_messages = $conn->query($sql_group_messages);
                     </select>
                     <input type="submit" id="kickButton" value="Kick User">
                 </form>
-                
+                <br>
+                <hr>
                 <p>Change user roles</p>
 
                 <form id="addModForm" action="" method="post">
