@@ -118,7 +118,31 @@ $result_group_messages = $conn->query($sql_group_messages);
                     $conn->query("SET FOREIGN_KEY_CHECKS=1");
 
                     $stmt_kick_user->close();
+                } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_roles']) && isset($_POST['roles'])) {
+                    $user_roles = $_POST['user_roles'];
+                    $roles = $_POST['roles'];
+
+                    if ($roles == 'no-role') {
+                        $stmt_remove_role = $conn->prepare("DELETE FROM admins WHERE username = (SELECT username FROM users WHERE id = ?)");
+                        $stmt_remove_role->bind_param("i", $user_roles);
+                        if ($stmt_remove_role->execute()) {
+                            $message = "Role successfully removed.";
+                        } else {
+                            $message = "Error removing role: " . $conn->error;
+                        }
+                        $stmt_remove_role->close();
+                    } else {
+                        $stmt_update_role = $conn->prepare("REPLACE INTO admins (username, role) VALUES ((SELECT username FROM users WHERE id = ?), ?)");
+                        $stmt_update_role->bind_param("is", $user_roles, $roles);
+                        if ($stmt_update_role->execute()) {
+                            $message = "Role successfully updated.";
+                        } else {
+                            $message = "Error updating role: " . $conn->error;
+                        }
+                        $stmt_update_role->close();
+                    }
                 }
+
                 ?>
 
                 <form id="kickForm" action="" method="post">
@@ -137,6 +161,31 @@ $result_group_messages = $conn->query($sql_group_messages);
                         ?>
                     </select>
                     <input type="submit" id="kickButton" value="Kick User">
+                </form>
+                
+                <p>Change user roles</p>
+
+                <form id="addModForm" action="" method="post">
+                    <select name="user_roles" id="user_roles">
+                        <?php
+                        $sql_users = "SELECT id, username FROM users";
+                        $result_users = $conn->query($sql_users);
+
+                        if ($result_users->num_rows > 0) {
+                            while ($user = $result_users->fetch_assoc()) {
+                                echo "<option value='" . htmlspecialchars($user['id']) . "'>" . htmlspecialchars($user['username']) . "</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No users available</option>";
+                        }
+                        ?>
+                    </select>
+                    <select name="roles" id="roles">
+                        <option value="admin">Admin</option>
+                        <option value="mod">Mod</option>
+                        <option value="no-role">No Role</option>
+                    </select>
+                    <input type="submit" id="updateUser" value="Update User">
                 </form>
 
                 <?php   
