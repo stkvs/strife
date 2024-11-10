@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); // Prevent form submission
 
         let username = document.querySelector('#username').value;
+        let email = document.querySelector('#email').value; // Capture email
         let password = document.querySelector('#password').value;
         let confirm_password = document.querySelector('#confirm-password').value;
 
@@ -14,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
             })
             .then(response => response.text())
             .then(data => {
