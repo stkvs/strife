@@ -78,6 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         window.messagePollingInterval = setInterval(() => {
             fetchPrivateMessages(selectedUserId);
-        }, 1000); // Poll every 5 seconds
+        }, 1000); // Poll every 1 second
     }
 });

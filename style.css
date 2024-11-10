@@ -174,7 +174,6 @@ h2 {
   padding: 16px;
   border-radius: 0.5rem;
   background-color: #202225;
-  /* display: none; */
   position: absolute;
   right: 16px;
   top: 16px;
@@ -239,24 +238,6 @@ p a:hover {
   background-color: #202225;
   padding: 16px;
   border-radius: 0.5rem;
-}
-
-/* General Reset */
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-} */
-
-/* Body Styling */
-body {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  background-color: #2f3136; /* Discord dark background */
-  color: #ffffff; /* White text */
-  padding: 0;
 }
 
 /* Left Sidebar */
@@ -387,6 +368,7 @@ input[type="button"] {
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s ease;
+  width: 15%;
 }
 
 input[type="button"]:hover {
@@ -395,6 +377,11 @@ input[type="button"]:hover {
 
 input[type="button"]:active {
   background-color: #3b44a1;
+}
+
+input[type="button"]:disabled {
+  background-color: #202225;
+  cursor: not-allowed;
 }
 
 /* file upload button */
@@ -418,64 +405,4 @@ input[type="file"]::file-selector-button:hover {
 /* file upload button active state */
 input[type="file"]::file-selector-button:active {
   background-color: #3b44a1;
-}
-
-/* Right Sidebar (User Info) */
-.user-sidebar {
-  position: fixed;
-  right: 0;
-  width: 250px;
-  background-color: #202225;
-  padding: 20px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.user-sidebar h2 {
-  color: white;
-}
-
-.user-sidebar p {
-  color: #b9bbbe;
-  font-size: 14px;
-}
-
-.user-sidebar img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-}
-
-/* Add Responsiveness for smaller screens */
-@media screen and (max-width: 1024px) {
-  .container {
-    padding-left: 20px; /* Remove space for sidebar on smaller screens */
-  }
-
-  .user-sidebar {
-    display: none; /* Hide right sidebar on smaller screens */
-  }
-
-  .sidebar {
-    width: 60px; /* Smaller sidebar on mobile */
-    padding: 10px 0;
-  }
-}
-
-/* Additional Styling for Logout and other elements */
-p {
-  margin-top: 10px;
-  text-align: center;
-}
-
-p a {
-  color: #5865f2;
-  text-decoration: none;
-}
-
-p a:hover {
-  text-decoration: underline;
 }

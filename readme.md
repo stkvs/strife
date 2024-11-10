@@ -8,12 +8,12 @@ To get started with Strife, follow these steps:
 
 1. Install the required Python packages:
     ```bash
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     ```
 
 2. Set up the database:
     ```bash
-    python ./database/dbMasterFile.py
+    python3 ./database/dbMasterFile.py
     ```
 
 You're all set! Enjoy using Strife.
